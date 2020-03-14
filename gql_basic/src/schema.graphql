@@ -1,0 +1,69 @@
+type Query{
+    me:User!
+    user(id:ID):[User!]!
+    article(id:ID):[Article]!
+    comment(id:ID):[Comment]!
+}
+type Mutation{
+    createUser(data:CreateUserInput!):[User!]
+    updateUser(id:ID!,data:updateUserInput!):User!
+    deleteUser(id:ID!):User!
+    createArticle(data:CreateArticleInput!):Article!
+    deleteArticle(id:ID!):Article!
+    createComment(data:CreateCommentInput!):Comment!
+}
+type Subscription{
+    somethingChange:Int!
+    comment(aid:ID!):Comment!
+    article:articleSubscriptionPayload!
+}
+input CreateUserInput{
+    name:String!
+    age:Int
+}
+input updateUserInput{
+    name:String
+    age:Int
+}
+input CreateArticleInput{
+    title:String!
+    content:String!
+    author:ID!
+}
+input CreateCommentInput{
+    id:ID
+    txt:String!
+    aid:ID!
+    author:ID!
+}
+
+type User{
+    id:ID!
+    name:String!
+    age:Int,
+    text:[Article!]
+    comment:[Comment!]
+}
+type Article{
+    id:ID!
+    title:String!
+    content:String!
+    author:User!
+    comment:[Comment!]
+}
+type Comment{
+    id:ID!,
+    txt:String!
+    aid:ID!
+    author:ID!
+}
+type articleSubscriptionPayload{
+    mutation:Mutationtype!
+    data:Article!
+}
+
+enum Mutationtype{
+    CREATED
+    UPDATED
+    DELETED
+}
