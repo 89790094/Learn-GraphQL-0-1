@@ -1,0 +1,9 @@
+endpoint: http://localhost:4466
+datamodel: datamodel.prisma
+secret: QO06eeIhLvkDyZWl7
+
+generate:
+  - generator: javascript-client
+    output: ./generated/prisma-client
+  - generator: graphql-schema
+    output: ./generated/prisma.graphql

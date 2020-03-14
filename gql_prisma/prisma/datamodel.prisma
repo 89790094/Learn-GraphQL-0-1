@@ -1,0 +1,28 @@
+type User {
+  id: ID! @id
+  name: String!
+  password: String!
+  email: String! @unique
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+  article: [Article!]! @relation(name:"ArticleToUser",onDelete:CASCADE)
+  comment: [Comment!]! @relation(name:"CommentToUser",onDelete:CASCADE)
+}
+type Article{
+    id: ID! @id
+    title: String!
+    content: String!
+    published: Boolean! @default(value:false)
+    author: User! @relation(name:"ArticleToUser",onDelete:SET_NULL)
+    comment: [Comment!]! @relation(name:"CommentToArticle",onDelete:CASCADE)
+    createdAt: DateTime! @createdAt
+    updatedAt: DateTime! @updatedAt
+}
+type Comment{
+    id: ID! @id
+    txt: String!
+    article: Article! @relation(name:"CommentToArticle",onDelete:SET_NULL)
+    author: User! @relation(name:"CommentToUser",onDelete:SET_NULL)
+    createdAt: DateTime! @createdAt
+    updatedAt: DateTime! @updatedAt
+}

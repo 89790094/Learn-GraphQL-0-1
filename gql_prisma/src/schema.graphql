@@ -1,0 +1,113 @@
+# import UserOrderByInput,ArticleOrderByInput,CommentOrderByInput from '../prisma/generated/prisma.graphql'
+
+type Query {
+	users(keyword: String, first: Int, skip: Int, orderBy: UserOrderByInput): [User!]!
+	articles(keyword: String, first: Int, skip: Int, orderBy: ArticleOrderByInput): [Article!]!
+	comments(keyword: String, orderBy: CommentOrderByInput): [Comment!]!
+}
+type Mutation {
+	createUser(data: CreateUserInput!): AuthPayload!
+	userLogin(data: UserLoninInput): AuthPayload!
+	updateUser(data: UpdateUserInput!): User!
+	deleteUser: User!
+	deleteManyUsers(query: [String!]!): BatchPayload!
+	createArticle(data: CreateArticleInput!): Article!
+	deleteArticle(id: ID!): Article!
+	updateArticle(id: ID!, data: UpdateArticleInput): Article!
+	createComment(data: CreateCommentInput!): Comment!
+}
+type Subscription {
+	user: UserSubscriptionPayload!
+	comment(articleId: ID): CommentSubscriptionPayload!
+	article: ArticleSubscriptionPayload!
+	myArticle: ArticleSubscriptionPayload!
+}
+input CreateUserInput {
+	name: String!
+	password: String!
+	email: String!
+}
+
+input UpdateUserInput {
+	name: String
+	password: String
+	email: String
+}
+
+input UserLoninInput {
+	email: String!
+	password: String!
+}
+
+input CreateArticleInput {
+	title: String!
+	content: String!
+	published: Boolean
+}
+
+input UpdateArticleInput {
+	title: String
+	content: String
+	published: Boolean
+}
+
+input CreateCommentInput {
+	txt: String!
+	article: ID!
+}
+
+type AuthPayload {
+	user: User!, 
+	token: String!
+}
+
+type User {
+	id: ID!
+	name: String!
+	password: String
+	email: String
+	article: [Article!]!
+	comment: [Comment!]!
+	createdAt: String!
+	updatedAt: String!
+}
+type Article {
+	id: ID!
+	title: String!
+	content: String!
+	published: Boolean!
+	author: User!
+	comment: [Comment!]
+	createdAt: String!
+	updatedAt: String!
+}
+type Comment {
+	id: ID!, 
+	txt: String!
+	article: Article!
+	author: User!
+	createdAt: String!
+	updatedAt: String!
+}
+type UserSubscriptionPayload {
+	mutation: Mutationtype!
+	node: User
+}
+type ArticleSubscriptionPayload {
+	mutation: Mutationtype!
+	node: Article
+}
+type CommentSubscriptionPayload {
+	mutation: Mutationtype!
+	node: Comment
+}
+
+enum Mutationtype {
+	CREATED
+	UPDATED
+	DELETED
+}
+
+type BatchPayload {
+	count: Int!
+}
